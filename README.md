@@ -1,0 +1,1 @@
+This project implements and visualizes multiple sweepline algorithms.
