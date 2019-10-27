@@ -1,16 +1,20 @@
 package sweepLine.algorithm.closestPoints;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.logging.Logger;
 
 import javafx.scene.control.ListView;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Line;
+import sweepLine.algorithm.areaOfTheUnionOfTwoRectangles.BoxUnion;
 import sweepLine.framework.AbstractFrameworkAlgorithm;
 import sweepLine.gui.Designer;
 
 //https://baptiste-wicht.com/posts/2010/04/closest-pair-of-point-plane-sweep-algorithm.html
 
 public class ClosestPoints extends AbstractFrameworkAlgorithm<PointEvent,PointEvent> {
+	
+	private final static Logger log = Logger.getLogger(ClosestPoints.class.getName());
 	
 	PointEvent[] closestPair = new PointEvent[2];
 	double currentMininmalDistance;
@@ -22,7 +26,7 @@ public class ClosestPoints extends AbstractFrameworkAlgorithm<PointEvent,PointEv
 		currentMininmalDistance = Double.POSITIVE_INFINITY;
 	}
 	
-	public void computeNext(PointEvent point1) {					
+	public void computeNext(PointEvent point1) {
 			//Delete points which are too far away
 			PointEvent temppoint = point1;
 			while (temppoint != null){

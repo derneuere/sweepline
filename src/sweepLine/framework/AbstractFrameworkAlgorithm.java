@@ -6,6 +6,7 @@ import java.util.Comparator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Line;
@@ -83,11 +84,12 @@ public abstract class AbstractFrameworkAlgorithm<E extends AbstractFrameworkEven
 
 	/* Animates the line moving to event. */ 
 	private void moveSweepLine(double x) {
-		// set end position in ms
-		double duration = 5 * Math.abs(sweepline.getTranslateX() - x);
+		if(Platform.isFxApplicationThread()) {
+			// set end position in ms
+			double duration = 5 * Math.abs(sweepline.getTranslateX() - x);
 		
-		// move sweep line to event:
-		Timeline timeline = new Timeline();
+			// move sweep line to event:
+			Timeline timeline = new Timeline();
 		timeline.getKeyFrames().addAll(
 			new KeyFrame(
 				Duration.ZERO, // set start position at 0
@@ -100,7 +102,7 @@ public abstract class AbstractFrameworkAlgorithm<E extends AbstractFrameworkEven
 		);
 	
 		// play animation
-		timeline.play();
+		timeline.play();}
 	}
 
 	/**
@@ -167,9 +169,11 @@ public abstract class AbstractFrameworkAlgorithm<E extends AbstractFrameworkEven
 	}
 	
 	private void updateTreeSetView() {
-		this.treeSetView.getItems().clear();
-		for (T t : this.sweepStatusStructure) {
-			this.treeSetView.getItems().add(t.toString());	
+		if(treeSetView != null) {
+			this.treeSetView.getItems().clear();
+			for (T t : this.sweepStatusStructure) {
+				this.treeSetView.getItems().add(t.toString());	
+			}
 		}
 	}
 
