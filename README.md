@@ -2,6 +2,7 @@ This project implements and visualizes multiple sweepline algorithms.
 
 Tech stack:
 
- - Java 1.8
- - JavaFX
+ - Java 12
+ - OpenFX
  - JUnit
+ - Maven
