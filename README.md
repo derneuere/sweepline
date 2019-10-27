@@ -11,4 +11,4 @@ mvn clean javafx:run
 * [OpenJDK](https://adoptopenjdk.net/) - Development Environment
 * [Maven](https://maven.apache.org/) - Dependency Management
 * [OpenFX](https://openjfx.io/) - Used to design the gui
-* [JUnit](https://junit.org/junit5/) - Testframework
+* [JUnit](https://junit.org/junit5/) - Test framework
