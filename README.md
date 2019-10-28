@@ -1,4 +1,4 @@
-# Visualizing of Sweepline Algorithms
+# Visualizing of Sweepline Algorithms [![Build Status](https://travis-ci.org/zainlol/Sweepline.svg?branch=master)](https://travis-ci.org/zainlol/Sweepline)
 This project implements and visualizes multiple sweepline algorithms.
 
 ### Installing
