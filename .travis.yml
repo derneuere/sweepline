@@ -1,5 +1,4 @@
 language: java
-env:
-  global:
-    - JAVA_HOME=/usr/lib/jvm/java-8-oracle
+jdk: 
+    - openjdk8
 script: ./mvnw clean verify
