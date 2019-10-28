@@ -1,5 +1,5 @@
 language: java
-jdk:
-  - openjdk11
+env:
+  global:
+    - JAVA_HOME=/usr/lib/jvm/java-8-oracle
 script: ./mvnw clean verify
-os: windows
