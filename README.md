@@ -1,6 +1,6 @@
 # Visualizing of Sweepline Algorithms [![Build Status](https://travis-ci.org/zainlol/Sweepline.svg?branch=master)](https://travis-ci.org/zainlol/Sweepline)
 This project implements and visualizes multiple sweepline algorithms.
-(https://i.gyazo.com/3f9859716edbc4b064ebe9bbd49c4744.gif =250x=250x)
+[![Image from Gyazo](https://i.gyazo.com/20f1ff1f16be35f67e33c20117ca09d8.gif)]
 ### Installing
 ```
 git clone
