@@ -24,9 +24,7 @@ import sweepLine.library.AbstractAlgorithm;
  * @param <E> - Event type
  * @param <T> - TreeSet type (binary search tree)
  */
-public abstract class AbstractFrameworkAlgorithm<E extends AbstractFrameworkEvent, T> extends AbstractAlgorithm<E,T>{
-
-	
+public abstract class AbstractFrameworkAlgorithm<E extends AbstractFrameworkEvent, T> extends AbstractAlgorithm<E,T>{	
 	private class FrameworkState {
 		ArrayList<Shape> shapeInsertions;
 		ArrayList<Shape> shapeDeletions;

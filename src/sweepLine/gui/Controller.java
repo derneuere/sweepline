@@ -1,5 +1,9 @@
 package sweepLine.gui;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
@@ -13,12 +17,14 @@ import javafx.scene.control.TreeView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import sweepLine.algorithm.areaOfTheUnionOfTwoRectangles.BoxUnion;
-import sweepLine.algorithm.closestPoints.ClosestPoints;
-import sweepLine.algorithm.convexHull.AndrewsConvexHull;
-import sweepLine.algorithm.crossingLines.bentleyOttmann.BentleyOttmann;
-import sweepLine.algorithm.crossingLines.orthogonalLines.OrthogonalLinesAlgorithm;
 import sweepLine.framework.AbstractFrameworkAlgorithm;
+import sweepLine.gui.panel.AlgorithmView;
+import sweepLine.gui.panel.AndrewsAlgorithmView;
+import sweepLine.gui.panel.BentleyOttmannView;
+import sweepLine.gui.panel.BoxUnionView;
+import sweepLine.gui.panel.Category;
+import sweepLine.gui.panel.ClosestsPointsView;
+import sweepLine.gui.panel.OrthogonalLinesView;
 
 public class Controller {
 
@@ -37,33 +43,41 @@ public class Controller {
 
 	@FXML
 	private TreeView<String> algoTreeView;
-
-	private void initializeAlgorithmTreeView() {
-		// FIXME reflection: get all algorithms
-		TreeItem<String> root = new TreeItem<String>("Algorithm");
-
-		algoTreeView.setRoot(root);
-
-		TreeItem<String> algo1 = new TreeItem<String>("Crossing lines");
-		root.getChildren().add(algo1);
-		algo1.getChildren().add(new TreeItem<String>("Orthogonal lines"));
-		algo1.getChildren().add(new TreeItem<String>("Bentley-Ottmann"));
-		algo1.setExpanded(true);
-
-		TreeItem<String> algo2 = new TreeItem<String>("Closest Points");
-		root.getChildren().add(algo2);
-		// ...
-		algo2.setExpanded(true);
-
-		TreeItem<String> algo3 = new TreeItem<String>("Rectange intersection");
-		root.getChildren().add(algo3);
-		// ...
-		algo3.setExpanded(true);
-
-		TreeItem<String> algo4 = new TreeItem<String>("Andrew's algorithm");
-		root.getChildren().add(algo4);
-
+	
+	private TreeItem<String> buildTree(List<AlgorithmView> views) {
+		TreeItem<String> root = new TreeItem<String>("Algorithms");
+		
+		Arrays.asList(Category.values()).forEach(i -> {
+			root.getChildren().add(new TreeItem<String>(i.getText()));
+		});
+		
+		views.forEach(i -> {
+				TreeItem<String> currentRoot = root;
+				if(i.getCategory() != null){
+					TreeItem<String> categoryRoot = root.getChildren().stream()
+							.filter(f -> f.getValue().equals(i.getCategory().getText()))
+							.findFirst().get();
+					currentRoot = categoryRoot;
+				}
+				currentRoot.getChildren().add(new TreeItem<String>(i.getName()));
+				
+		});
+		
 		root.setExpanded(true);
+		return root;
+	}
+	
+	private void initializeAlgorithmTreeView() {
+		
+		List<AlgorithmView> views = new ArrayList<>();
+		views.add(new BentleyOttmannView(drawingPane, dataList, dataList));
+		views.add(new BoxUnionView(drawingPane, dataList, dataList));
+		views.add(new ClosestsPointsView(drawingPane, dataList, dataList));
+		views.add(new OrthogonalLinesView(drawingPane, dataList, dataList));
+		views.add(new AndrewsAlgorithmView(drawingPane, dataList, dataList));
+		
+		TreeItem<String> root = buildTree(views);
+		algoTreeView.setRoot(root);		
 
 		// On selection change
 		algoTreeView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<TreeItem<String>>() {
@@ -75,8 +89,6 @@ public class Controller {
 				dataList.getItems().clear();
 				btnNext.setDisable(false);
 				
-
-				
 				// Set Algorithm name
 				String name = "";
 				TreeItem<String> parent = selectedItem;
@@ -87,46 +99,21 @@ public class Controller {
 				dataList.getItems().add(name.substring(3));
 				
 				
-
+				AlgorithmView selectedView = views.stream().filter(i -> i.getName().equals(selectedItem.getValue())).findFirst().orElse(null);
 				// Select algorithm
-				switch (selectedItem.getValue()) {
-				case "Bentley-Ottmann":
-					BentleyOttmann algo = new BentleyOttmann(drawingPane, dataList, treeSetList);
-					drawingPane.setScaleY(1);
-					actAlgo = algo;
-					break;
-				case "Orthogonal lines":
-					OrthogonalLinesAlgorithm a = new OrthogonalLinesAlgorithm(drawingPane, dataList, treeSetList);
-					drawingPane.setScaleY(1);
-					actAlgo = a;
-					break;
-				case "Closest Points":
-					ClosestPoints alg = new ClosestPoints(drawingPane, dataList, treeSetList);
-					drawingPane.setScaleY(-1);
-					actAlgo = alg;
-					break;
-				case "Andrew's algorithm":
-					AndrewsConvexHull algor = new AndrewsConvexHull(drawingPane, dataList, treeSetList);
-					drawingPane.setScaleY(1);
-					actAlgo = algor;
-					break;
-				case "Rectange intersection":
-					BoxUnion al = new BoxUnion(drawingPane, dataList, treeSetList);
-					drawingPane.setScaleY(-1);
-					actAlgo = al;
-					break;
-				default:
-					// FIXME handle
-					dataList.getItems().add("Not yet implemented");
+				if(selectedView != null) {
+					actAlgo = selectedView.getAlgorithm();
+					drawingPane.setScaleY(selectedView.yScale());
+					actAlgo.init();
+					btnRandom.setDisable(false);
+					btnSolve.setDisable(false);
+					btnNext.setDisable(false);
 				}
-				actAlgo.init();
-				btnRandom.setDisable(false);
-				btnSolve.setDisable(false);
-				btnNext.setDisable(false);
-
 			}
 		});
 	}
+
+	
 
 	// --------------------------------------------------------------------
 	// Drawing Pane
